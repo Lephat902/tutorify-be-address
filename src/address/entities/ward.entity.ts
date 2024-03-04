@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { District } from './district.entity';
 
 @Entity({ name: 'wards' })
 export class Ward {
@@ -21,8 +22,8 @@ export class Ward {
   codeName: string;
 
   @Column()
-  districtCode: string;
-
-  @Column()
   administrativeUnitId: number;
+
+  @ManyToOne(() => District, (district) => district.wards)
+  district: District;
 }

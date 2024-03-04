@@ -10,6 +10,5 @@ export class FullDistrictResponseDto {
   fullName: string;
   fullNameEn: string;
   codeName: string;
-  provinceCode: string;
   administrativeUnitId: number;
 }

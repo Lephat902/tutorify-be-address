@@ -10,6 +10,5 @@ export class FullWardResponseDto {
   readonly fullName: string;
   readonly fullNameEn: string;
   readonly codeName: string;
-  readonly districtCode: string;
   readonly administrativeUnitId: number;
 }

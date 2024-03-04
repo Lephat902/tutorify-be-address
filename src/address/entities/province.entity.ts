@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { District } from './district.entity';
 
 @Entity({ name: 'provinces' })
 export class Province {
@@ -25,4 +26,7 @@ export class Province {
 
   @Column()
   administrativeRegionId: number;
+
+  @OneToMany(() => District, (district) => district.province)
+  districts: District[];
 }

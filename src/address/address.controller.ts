@@ -8,6 +8,7 @@ import {
   FullWardResponseDto,
   ProvinceResponseDto,
   WardResponseDto,
+  GetGeoLocationDto,
 } from './dtos';
 
 @Controller()
@@ -61,5 +62,13 @@ export class AddressController {
     const wardEntity = await this.addressService.getWardByCode(wardCode);
 
     return wardEntity;
+  }
+
+  @MessagePattern({ cmd: 'getGeoLocation' })
+  async getGeoLocation(getGeoLocationDto: GetGeoLocationDto) {
+    return this.addressService.getGeoLocation(
+      getGeoLocationDto.address,
+      getGeoLocationDto.wardCode,
+    );
   }
 }

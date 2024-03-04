@@ -7,9 +7,11 @@ import { DataSource } from 'typeorm';
 import { District, Province, Ward } from './entities';
 import { readFile } from 'node:fs/promises';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
+    HttpModule,
     TypeOrmModule.forFeature([Province, District, Ward]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
