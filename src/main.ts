@@ -1,4 +1,5 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector} from '@nestjs/core';
+import { ClassSerializerInterceptor } from '@nestjs/common';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
 import { GlobalExceptionsFilter } from './global-exception-filter';
@@ -18,6 +19,9 @@ async function bootstrap() {
       },
     },
   );
+
+  // Set up global interceptor to standardize output using class serialization
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   // Use the global exception filter
   app.useGlobalFilters(new GlobalExceptionsFilter());

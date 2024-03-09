@@ -1,9 +1,11 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { Ward } from './ward.entity';
 import { Province } from './province.entity';
+import { Expose } from 'class-transformer';
 
 @Entity({ name: 'districts' })
 export class District {
+  @Expose({ name: "id" })
   @PrimaryColumn()
   code: string;
 

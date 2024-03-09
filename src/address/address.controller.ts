@@ -13,7 +13,7 @@ import {
 
 @Controller()
 export class AddressController {
-  constructor(private readonly addressService: AddressService) {}
+  constructor(private readonly addressService: AddressService) { }
 
   @MessagePattern({ cmd: 'getAllProvinces' })
   async getAllProvinces(): Promise<ProvinceResponseDto[]> {
