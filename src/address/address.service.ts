@@ -64,7 +64,7 @@ export class AddressService {
       .createQueryBuilder(Ward, 'ward')
       .innerJoin('ward.district', 'district')
       .innerJoin('district.province', 'province')
-      .select(['ward.fullNameEn', 'district.fullNameEn', 'province.fullNameEn'])
+      .select(['ward', 'district', 'province'])
       .where('ward.code = :wardCode', { wardCode })
       .getOne();
   }

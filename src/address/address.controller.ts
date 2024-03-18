@@ -64,6 +64,11 @@ export class AddressController {
     return wardEntity;
   }
 
+  @MessagePattern({ cmd: 'getFullAddressByWardCode' })
+  async getFullAddressByWardCode(wardCode: string) {
+    return this.addressService.getFullAddressByWardCode(wardCode);
+  }
+
   @MessagePattern({ cmd: 'getGeoLocation' })
   async getGeoLocation(getGeoLocationDto: GetGeoLocationDto) {
     return this.addressService.getGeoLocation(
