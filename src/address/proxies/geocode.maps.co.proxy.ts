@@ -1,8 +1,9 @@
 import { HttpService } from "@nestjs/axios";
-import { GeocodeResponse, GeocodeProxy } from "../interfaces";
+import { GeocodeProxy } from "../interfaces";
 import { ConfigService } from "@nestjs/config";
 import { firstValueFrom } from "rxjs";
 import { Injectable } from "@nestjs/common";
+import { GeocodeResponseDto } from "@tutorify/shared";
 
 interface IGeoLocationMatchingPlaceResponse {
     place_id: number;
@@ -27,7 +28,7 @@ export class GeocodeMapsCoProxy implements GeocodeProxy {
         private readonly configService: ConfigService,
     ) { }
 
-    async geocode(q: string): Promise<GeocodeResponse> {
+    async geocode(q: string): Promise<GeocodeResponseDto> {
         const params = {
             q,
             api_key: this.configService.get('GEOCODE_MAPS_CO_API_KEY'),

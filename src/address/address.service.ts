@@ -2,8 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { District, Province, Ward } from './entities';
 import { ProvinceResponseDto } from './dtos';
-import { GeocodeProxy, GeocodeResponse } from './interfaces';
+import { GeocodeProxy } from './interfaces';
 import { LOCATION_IQ } from './proxies';
+import { GeocodeResponseDto } from '@tutorify/shared';
 
 @Injectable()
 export class AddressService {
@@ -70,7 +71,7 @@ export class AddressService {
       .getOne();
   }
 
-  async getGeocodeFromAddressAndWardId(address: string, wardCode: string): Promise<GeocodeResponse> {
+  async getGeocodeFromAddressAndWardId(address: string, wardCode: string): Promise<GeocodeResponseDto> {
     const fullWard = await this.getFullAddressByWardCode(wardCode);
     const addressQuery = `${address}, ${fullWard.fullNameEn}, ${fullWard.district.fullNameEn}, ${fullWard.district.province.fullNameEn}, Vietnam`;
     console.log('Address to query: ', addressQuery);

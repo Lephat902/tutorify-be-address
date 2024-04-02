@@ -1,8 +1,9 @@
 import { HttpService } from "@nestjs/axios";
-import { GeocodeResponse, GeocodeProxy } from "../interfaces";
+import { GeocodeProxy } from "../interfaces";
 import { ConfigService } from "@nestjs/config";
 import { firstValueFrom } from "rxjs";
 import { Injectable } from "@nestjs/common";
+import { GeocodeResponseDto } from "@tutorify/shared";
 
 interface LocationIQResponse {
     lat: string;
@@ -18,7 +19,7 @@ export class LocationIQProxy implements GeocodeProxy {
         private readonly configService: ConfigService,
     ) { }
 
-    async geocode(q: string): Promise<GeocodeResponse> {
+    async geocode(q: string): Promise<GeocodeResponseDto> {
         const params = {
             key: this.configService.get<string>('GEOCODE_LOCATION_IQ_ACCESS_TOKEN'),
             q,

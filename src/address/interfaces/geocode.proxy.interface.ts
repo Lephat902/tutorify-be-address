@@ -1,5 +1,5 @@
-import { GeocodeResponse } from "./geocode-response.interface";
+import { GeocodeResponseDto } from "@tutorify/shared";
 
 export interface GeocodeProxy {
-    geocode(fullAddress: string): Promise<GeocodeResponse>;
+    geocode(fullAddress: string): Promise<GeocodeResponseDto>;
 }
