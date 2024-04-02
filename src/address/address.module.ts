@@ -8,6 +8,7 @@ import { District, Province, Ward } from './entities';
 import { readFile } from 'node:fs/promises';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { HttpModule } from '@nestjs/axios';
+import { GEOCODE_MAPS_CO, GEOCODE_XYZ, GeocodeMapsCoProxy, GeocodeXYZProxy, LOCATION_IQ, LocationIQProxy } from './proxies';
 
 @Module({
   imports: [
@@ -51,6 +52,20 @@ import { HttpModule } from '@nestjs/axios';
     }),
   ],
   controllers: [AddressController],
-  providers: [AddressService],
+  providers: [
+    AddressService,
+    {
+      provide: GEOCODE_XYZ,
+      useClass: GeocodeXYZProxy,
+    },
+    {
+      provide: GEOCODE_MAPS_CO,
+      useClass: GeocodeMapsCoProxy,
+    },
+    {
+      provide: LOCATION_IQ,
+      useClass: LocationIQProxy,
+    },
+  ],
 })
-export class AddressModule {}
+export class AddressModule { }

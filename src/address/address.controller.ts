@@ -8,7 +8,7 @@ import {
   FullWardResponseDto,
   ProvinceResponseDto,
   WardResponseDto,
-  GetGeoLocationDto,
+  GetGeocodeDto,
 } from './dtos';
 
 @Controller()
@@ -69,11 +69,11 @@ export class AddressController {
     return this.addressService.getFullAddressByWardCode(wardCode);
   }
 
-  @MessagePattern({ cmd: 'getGeoLocation' })
-  async getGeoLocation(getGeoLocationDto: GetGeoLocationDto) {
-    return this.addressService.getGeoLocation(
-      getGeoLocationDto.address,
-      getGeoLocationDto.wardCode,
+  @MessagePattern({ cmd: 'getGeocodeFromAddressAndWardId' })
+  async getGeocodeFromAddressAndWardId(getGeocodeDto: GetGeocodeDto) {
+    return this.addressService.getGeocodeFromAddressAndWardId(
+      getGeocodeDto.address,
+      getGeocodeDto.wardId,
     );
   }
 }

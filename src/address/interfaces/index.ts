@@ -1,1 +1,2 @@
-export * from './geo-location-matching-place.response.interface';
+export * from './geocode-response.interface';
+export * from './geocode.proxy.interface';

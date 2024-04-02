@@ -1,4 +1,4 @@
-export class GetGeoLocationDto {
+export interface GetGeocodeDto {
   address: string;
-  wardCode: string;
+  wardId: string;
 }

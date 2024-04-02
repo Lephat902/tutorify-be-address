@@ -1,31 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { District, Province, Ward } from './entities';
 import { ProvinceResponseDto } from './dtos';
-import { HttpService } from '@nestjs/axios';
-import { ConfigService } from '@nestjs/config';
-import { firstValueFrom } from 'rxjs';
-import { IGeoLocationMatchingPlaceResponse } from './interfaces';
+import { GeocodeProxy, GeocodeResponse } from './interfaces';
+import { LOCATION_IQ } from './proxies';
 
 @Injectable()
 export class AddressService {
   constructor(
     private readonly dataSource: DataSource,
-    private readonly httpService: HttpService,
-    private readonly configService: ConfigService,
-  ) {}
+    @Inject(LOCATION_IQ)
+    private readonly geocodeProxy: GeocodeProxy,
+  ) { }
 
   getAllProvinces(): Promise<ProvinceResponseDto[]> {
     return this.dataSource
       .createQueryBuilder(Province, 'province')
-      .select(['province.code', 'province.name'])
+      .select(['province.code', 'province.name', 'province.nameEn', 'province.fullName', 'province.fullNameEn'])
       .getMany();
   }
 
   getAllDistricts(provinceCode: string) {
     return this.dataSource
       .createQueryBuilder(District, 'district')
-      .select(['district.code', 'district.name'])
+      .select(['district.code', 'district.name', 'district.nameEn', 'district.fullName', 'district.fullNameEn'])
       .where('district.province_code = :provinceCode', { provinceCode })
       .getMany();
   }
@@ -33,7 +31,7 @@ export class AddressService {
   getAllWards(districtCode: string) {
     return this.dataSource
       .createQueryBuilder(Ward, 'ward')
-      .select(['ward.code', 'ward.name'])
+      .select(['ward.code', 'ward.name', 'ward.nameEn', 'ward.fullName', 'ward.fullNameEn'])
       .where('ward.district_code = :districtCode', { districtCode })
       .getMany();
   }
@@ -41,6 +39,7 @@ export class AddressService {
   getProvinceByCode(provinceCode: string) {
     return this.dataSource
       .createQueryBuilder(Province, 'province')
+      .select(['province.code', 'province.name', 'province.nameEn', 'province.fullName', 'province.fullNameEn'])
       .where('province.code = :provinceCode', { provinceCode })
       .getOne();
   }
@@ -48,6 +47,7 @@ export class AddressService {
   getDistrictByCode(districtCode: string) {
     return this.dataSource
       .createQueryBuilder(District, 'district')
+      .select(['district.code', 'district.name', 'district.nameEn', 'district.fullName', 'district.fullNameEn'])
       .where('district.code = :districtCode', { districtCode })
       .getOne();
   }
@@ -55,6 +55,7 @@ export class AddressService {
   getWardByCode(wardCode: string) {
     return this.dataSource
       .createQueryBuilder(Ward, 'ward')
+      .select(['ward.code', 'ward.name', 'ward.nameEn', 'ward.fullName', 'ward.fullNameEn'])
       .where('ward.code = :wardCode', { wardCode })
       .getOne();
   }
@@ -69,22 +70,11 @@ export class AddressService {
       .getOne();
   }
 
-  async getGeoLocation(address: string, wardCode: string) {
+  async getGeocodeFromAddressAndWardId(address: string, wardCode: string): Promise<GeocodeResponse> {
     const fullWard = await this.getFullAddressByWardCode(wardCode);
-    const addressQuery = `${fullWard.fullNameEn}, ${fullWard.district.fullNameEn}, ${fullWard.district.province.fullNameEn}, Vietnam`;
+    const addressQuery = `${address}, ${fullWard.fullNameEn}, ${fullWard.district.fullNameEn}, ${fullWard.district.province.fullNameEn}, Vietnam`;
+    console.log('Address to query: ', addressQuery);
 
-    const { data } = await firstValueFrom(
-      this.httpService.get<IGeoLocationMatchingPlaceResponse[]>(
-        this.configService.get('GEO_CODING_URL'),
-        {
-          params: {
-            q: addressQuery,
-            api_key: this.configService.get('GEO_CODING_API_KEY'),
-          },
-        },
-      ),
-    );
-
-    return data.length ? { lat: data[0].lat, lon: data[0].lon } : null;
+    return this.geocodeProxy.geocode(addressQuery);
   }
 }
