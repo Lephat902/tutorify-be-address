@@ -5,6 +5,7 @@ import { ProvinceResponseDto } from './dtos';
 import { GeocodeProxy } from './interfaces';
 import { LOCATION_IQ } from './proxies';
 import { GeocodeResponseDto } from '@tutorify/shared';
+import { removeLeadingZero } from './helpers';
 
 @Injectable()
 export class AddressService {
@@ -73,7 +74,9 @@ export class AddressService {
 
   async getGeocodeFromAddressAndWardId(address: string, wardCode: string): Promise<GeocodeResponseDto> {
     const fullWard = await this.getFullAddressByWardCode(wardCode);
-    const addressQuery = `${address}, ${fullWard.fullNameEn}, ${fullWard.district.fullNameEn}, ${fullWard.district.province.fullNameEn}, Vietnam`;
+    const wardName = removeLeadingZero(fullWard.fullNameEn);
+    const districtName = removeLeadingZero(fullWard.district.fullNameEn);
+    const addressQuery = `${address}, ${wardName}, ${districtName}, ${fullWard.district.province.fullNameEn}, Vietnam`;
     console.log('Address to query: ', addressQuery);
 
     return this.geocodeProxy.geocode(addressQuery);
