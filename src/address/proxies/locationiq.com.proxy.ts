@@ -6,8 +6,8 @@ import { Injectable } from "@nestjs/common";
 import { GeocodeResponseDto } from "@tutorify/shared";
 
 interface LocationIQResponse {
-    lat: string;
-    lon: string;
+    lat: number;
+    lon: number;
 }
 
 export const LOCATION_IQ = 'LOCATION_IQ';

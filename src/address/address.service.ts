@@ -38,27 +38,19 @@ export class AddressService {
       .getMany();
   }
 
-  getProvinceByCode(provinceCode: string) {
+  async getProvinceByProvinceCode(provinceCode: string) {
     return this.dataSource
       .createQueryBuilder(Province, 'province')
-      .select(['province.code', 'province.name', 'province.nameEn', 'province.fullName', 'province.fullNameEn'])
       .where('province.code = :provinceCode', { provinceCode })
       .getOne();
   }
 
-  getDistrictByCode(districtCode: string) {
+  async getFullAddressByDistrictCode(districtCode: string) {
     return this.dataSource
       .createQueryBuilder(District, 'district')
-      .select(['district.code', 'district.name', 'district.nameEn', 'district.fullName', 'district.fullNameEn'])
+      .innerJoin('district.province', 'province')
+      .select(['district', 'province'])
       .where('district.code = :districtCode', { districtCode })
-      .getOne();
-  }
-
-  getWardByCode(wardCode: string) {
-    return this.dataSource
-      .createQueryBuilder(Ward, 'ward')
-      .select(['ward.code', 'ward.name', 'ward.nameEn', 'ward.fullName', 'ward.fullNameEn'])
-      .where('ward.code = :wardCode', { wardCode })
       .getOne();
   }
 
@@ -83,7 +75,7 @@ export class AddressService {
   }
 
   async getGeocodeFromWardId(wardId: string): Promise<GeocodeResponseDto> {
-    const fullWard = await this.getWardByCode(wardId);
+    const fullWard = await this.getFullAddressByWardCode(wardId);
     const wardName = removeLeadingZero(fullWard.fullNameEn);
     const districtName = removeLeadingZero(fullWard.district.fullNameEn);
     const addressQuery = `${wardName}, ${districtName}, ${fullWard.district.province.fullNameEn}, Vietnam`;
@@ -93,7 +85,7 @@ export class AddressService {
   }
 
   async getGeocodeFromDistrictId(districtId: string): Promise<GeocodeResponseDto> {
-    const fullDistrict = await this.getDistrictByCode(districtId);
+    const fullDistrict = await this.getFullAddressByDistrictCode(districtId);
     const districtName = removeLeadingZero(fullDistrict.fullNameEn);
     const addressQuery = `${districtName}, ${fullDistrict.province.fullNameEn}, Vietnam`;
     console.log('Address to query: ', addressQuery);
@@ -102,7 +94,7 @@ export class AddressService {
   }
 
   async getGeocodeFromProvinceId(provinceId: string): Promise<GeocodeResponseDto> {
-    const fullProvince = await this.getProvinceByCode(provinceId);
+    const fullProvince = await this.getProvinceByProvinceCode(provinceId);
     const addressQuery = `${fullProvince.fullNameEn}, Vietnam`;
     console.log('Address to query: ', addressQuery);
 

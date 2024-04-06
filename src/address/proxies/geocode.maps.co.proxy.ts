@@ -11,8 +11,8 @@ interface IGeoLocationMatchingPlaceResponse {
     osm_type: string;
     osm_id: number;
     boundingbox: string[];
-    lat: string;
-    lon: string;
+    lat: number;
+    lon: number;
     display_name: string;
     class: string;
     type: string;

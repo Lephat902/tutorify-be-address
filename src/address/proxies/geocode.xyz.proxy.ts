@@ -6,8 +6,8 @@ import { Injectable } from "@nestjs/common";
 import { GeocodeResponseDto } from "@tutorify/shared";
 
 interface GeocodeXYZResponse {
-    latt: string;
-    longt: string;
+    latt: number;
+    longt: number;
 }
 
 export const GEOCODE_XYZ = 'GEOCODE_XYZ';
