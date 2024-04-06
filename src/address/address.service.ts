@@ -81,4 +81,31 @@ export class AddressService {
 
     return this.geocodeProxy.geocode(addressQuery);
   }
+
+  async getGeocodeFromWardId(wardId: string): Promise<GeocodeResponseDto> {
+    const fullWard = await this.getWardByCode(wardId);
+    const wardName = removeLeadingZero(fullWard.fullNameEn);
+    const districtName = removeLeadingZero(fullWard.district.fullNameEn);
+    const addressQuery = `${wardName}, ${districtName}, ${fullWard.district.province.fullNameEn}, Vietnam`;
+    console.log('Address to query: ', addressQuery);
+
+    return this.geocodeProxy.geocode(addressQuery);
+  }
+
+  async getGeocodeFromDistrictId(districtId: string): Promise<GeocodeResponseDto> {
+    const fullDistrict = await this.getDistrictByCode(districtId);
+    const districtName = removeLeadingZero(fullDistrict.fullNameEn);
+    const addressQuery = `${districtName}, ${fullDistrict.province.fullNameEn}, Vietnam`;
+    console.log('Address to query: ', addressQuery);
+
+    return this.geocodeProxy.geocode(addressQuery);
+  }
+
+  async getGeocodeFromProvinceId(provinceId: string): Promise<GeocodeResponseDto> {
+    const fullProvince = await this.getProvinceByCode(provinceId);
+    const addressQuery = `${fullProvince.fullNameEn}, Vietnam`;
+    console.log('Address to query: ', addressQuery);
+
+    return this.geocodeProxy.geocode(addressQuery);
+  }
 }

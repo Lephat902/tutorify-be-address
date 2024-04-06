@@ -76,4 +76,19 @@ export class AddressController {
       getGeocodeDto.wardId,
     );
   }
+
+  @MessagePattern({ cmd: 'getGeocodeFromWardId' })
+  async getGeocodeFromWardId(wardId: string) {
+    return this.addressService.getGeocodeFromWardId(wardId);
+  }
+
+  @MessagePattern({ cmd: 'getGeocodeFromDistrictId' })
+  async getGeocodeFromDistrictId(districtId: string) {
+    return this.addressService.getGeocodeFromDistrictId(districtId);
+  }
+
+  @MessagePattern({ cmd: 'getGeocodeFromProvinceId' })
+  async getGeocodeFromProvinceId(provinceId: string) {
+    return this.addressService.getGeocodeFromProvinceId(provinceId);
+  }
 }
