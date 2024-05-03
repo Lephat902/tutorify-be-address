@@ -7,6 +7,8 @@ import { LOCATION_IQ } from './proxies';
 import { GeocodeResponseDto } from '@tutorify/shared';
 import { removeLeadingZero } from './helpers';
 
+type FindOneOption = 'code' | 'slug';
+
 @Injectable()
 export class AddressService {
   constructor(
@@ -18,14 +20,14 @@ export class AddressService {
   getAllProvinces(): Promise<ProvinceResponseDto[]> {
     return this.dataSource
       .createQueryBuilder(Province, 'province')
-      .select(['province.code', 'province.name', 'province.nameEn', 'province.fullName', 'province.fullNameEn'])
+      .select(['province.code', 'province.name', 'province.nameEn', 'province.fullName', 'province.fullNameEn', 'province.slug'])
       .getMany();
   }
 
   getAllDistricts(provinceCode: string) {
     return this.dataSource
       .createQueryBuilder(District, 'district')
-      .select(['district.code', 'district.name', 'district.nameEn', 'district.fullName', 'district.fullNameEn'])
+      .select(['district.code', 'district.name', 'district.nameEn', 'district.fullName', 'district.fullNameEn', 'district.slug'])
       .where('district.province_code = :provinceCode', { provinceCode })
       .getMany();
   }
@@ -33,39 +35,39 @@ export class AddressService {
   getAllWards(districtCode: string) {
     return this.dataSource
       .createQueryBuilder(Ward, 'ward')
-      .select(['ward.code', 'ward.name', 'ward.nameEn', 'ward.fullName', 'ward.fullNameEn'])
+      .select(['ward.code', 'ward.name', 'ward.nameEn', 'ward.fullName', 'ward.fullNameEn', 'ward.slug'])
       .where('ward.district_code = :districtCode', { districtCode })
       .getMany();
   }
 
-  async getProvinceByProvinceCode(provinceCode: string) {
+  async getProvince(value: string, findOneOption: FindOneOption = "code") {
     return this.dataSource
       .createQueryBuilder(Province, 'province')
-      .where('province.code = :provinceCode', { provinceCode })
+      .where(`province.${findOneOption} = :value`, { value })
       .getOne();
   }
 
-  async getFullAddressByDistrictCode(districtCode: string) {
+  async getFullAddressByDistrict(value: string, findOneOption: FindOneOption = "code") {
     return this.dataSource
       .createQueryBuilder(District, 'district')
       .innerJoin('district.province', 'province')
       .select(['district', 'province'])
-      .where('district.code = :districtCode', { districtCode })
+      .where(`district.${findOneOption} = :value`, { value })
       .getOne();
   }
 
-  async getFullAddressByWardCode(wardCode: string) {
+  async getFullAddressByWard(value: string, findOneOption: FindOneOption = "code") {
     return this.dataSource
       .createQueryBuilder(Ward, 'ward')
       .innerJoin('ward.district', 'district')
       .innerJoin('district.province', 'province')
       .select(['ward', 'district', 'province'])
-      .where('ward.code = :wardCode', { wardCode })
+      .where(`ward.${findOneOption} = :value`, { value })
       .getOne();
   }
 
   async getGeocodeFromAddressAndWardId(address: string, wardCode: string): Promise<GeocodeResponseDto> {
-    const fullWard = await this.getFullAddressByWardCode(wardCode);
+    const fullWard = await this.getFullAddressByWard(wardCode);
     const wardName = removeLeadingZero(fullWard.fullNameEn);
     const districtName = removeLeadingZero(fullWard.district.fullNameEn);
     const addressQuery = `${address}, ${wardName}, ${districtName}, ${fullWard.district.province.fullNameEn}, Vietnam`;
@@ -75,7 +77,7 @@ export class AddressService {
   }
 
   async getGeocodeFromWardId(wardId: string): Promise<GeocodeResponseDto> {
-    const fullWard = await this.getFullAddressByWardCode(wardId);
+    const fullWard = await this.getFullAddressByWard(wardId);
     const wardName = removeLeadingZero(fullWard.fullNameEn);
     const districtName = removeLeadingZero(fullWard.district.fullNameEn);
     const addressQuery = `${wardName}, ${districtName}, ${fullWard.district.province.fullNameEn}, Vietnam`;
@@ -85,7 +87,7 @@ export class AddressService {
   }
 
   async getGeocodeFromDistrictId(districtId: string): Promise<GeocodeResponseDto> {
-    const fullDistrict = await this.getFullAddressByDistrictCode(districtId);
+    const fullDistrict = await this.getFullAddressByDistrict(districtId);
     const districtName = removeLeadingZero(fullDistrict.fullNameEn);
     const addressQuery = `${districtName}, ${fullDistrict.province.fullNameEn}, Vietnam`;
     console.log('Address to query: ', addressQuery);
@@ -94,7 +96,7 @@ export class AddressService {
   }
 
   async getGeocodeFromProvinceId(provinceId: string): Promise<GeocodeResponseDto> {
-    const fullProvince = await this.getProvinceByProvinceCode(provinceId);
+    const fullProvince = await this.getProvince(provinceId);
     const addressQuery = `${fullProvince.fullNameEn}, Vietnam`;
     console.log('Address to query: ', addressQuery);
 

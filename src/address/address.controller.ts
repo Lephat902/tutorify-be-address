@@ -3,12 +3,9 @@ import { MessagePattern } from '@nestjs/microservices';
 import { AddressService } from './address.service';
 import {
   DistrictResponseDto,
-  FullDistrictResponseDto,
-  FullProvinceResponseDto,
-  FullWardResponseDto,
-  ProvinceResponseDto,
-  WardResponseDto,
   GetGeocodeDto,
+  ProvinceResponseDto,
+  WardResponseDto
 } from './dtos';
 
 @Controller()
@@ -37,19 +34,34 @@ export class AddressController {
     return wardEntities;
   }
 
-  @MessagePattern({ cmd: 'getProvinceByProvinceCode' })
-  async getProvinceByProvinceCode(provinceCode: string) {
-    return this.addressService.getProvinceByProvinceCode(provinceCode);
+  @MessagePattern({ cmd: 'getProvince' })
+  async getProvince(provinceCode: string) {
+    return this.addressService.getProvince(provinceCode);
   }
 
   @MessagePattern({ cmd: 'getFullAddressByDistrictCode' })
   async getFullAddressByDistrictCode(districtCode: string) {
-    return this.addressService.getFullAddressByDistrictCode(districtCode);
+    return this.addressService.getFullAddressByDistrict(districtCode);
   }
 
   @MessagePattern({ cmd: 'getFullAddressByWardCode' })
   async getFullAddressByWardCode(wardCode: string) {
-    return this.addressService.getFullAddressByWardCode(wardCode);
+    return this.addressService.getFullAddressByWard(wardCode);
+  }
+
+  @MessagePattern({ cmd: 'getProvinceByProvinceSlug' })
+  async getProvinceByProvinceSlug(slug: string) {
+    return this.addressService.getProvince(slug, 'slug');
+  }
+
+  @MessagePattern({ cmd: 'getFullAddressByDistrictSlug' })
+  async getFullAddressByDistrictSlug(slug: string) {
+    return this.addressService.getFullAddressByDistrict(slug, 'slug');
+  }
+
+  @MessagePattern({ cmd: 'getFullAddressByWardSlug' })
+  async getFullAddressByWardSlug(slug: string) {
+    return this.addressService.getFullAddressByWard(slug, 'slug');
   }
 
   @MessagePattern({ cmd: 'getGeocodeFromAddressAndWardId' })

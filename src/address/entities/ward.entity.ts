@@ -8,6 +8,9 @@ export class Ward {
   @PrimaryColumn()
   code: string;
 
+  @Column({ unique: true })
+  slug: string;
+
   @Column()
   name: string;
 

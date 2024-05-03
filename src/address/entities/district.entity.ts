@@ -9,6 +9,9 @@ export class District {
   @PrimaryColumn()
   code: string;
 
+  @Column({ unique: true })
+  slug: string;
+
   @Column()
   name: string;
 
