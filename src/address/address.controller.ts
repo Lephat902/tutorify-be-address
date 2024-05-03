@@ -49,8 +49,8 @@ export class AddressController {
     return this.addressService.getFullAddressByWard(wardCode);
   }
 
-  @MessagePattern({ cmd: 'getProvinceByProvinceIdByProvinceSlug' })
-  async getProvinceByProvinceIdByProvinceSlug(slug: string) {
+  @MessagePattern({ cmd: 'getProvinceByProvinceSlug' })
+  async getProvinceByProvinceSlug(slug: string) {
     return this.addressService.getProvinceByProvinceId(slug, 'slug');
   }
 
