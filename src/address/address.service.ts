@@ -40,7 +40,7 @@ export class AddressService {
       .getMany();
   }
 
-  async getProvince(value: string, findOneOption: FindOneOption = "code") {
+  async getProvinceByProvinceId(value: string, findOneOption: FindOneOption = "code") {
     return this.dataSource
       .createQueryBuilder(Province, 'province')
       .where(`province.${findOneOption} = :value`, { value })
@@ -96,7 +96,7 @@ export class AddressService {
   }
 
   async getGeocodeFromProvinceId(provinceId: string): Promise<GeocodeResponseDto> {
-    const fullProvince = await this.getProvince(provinceId);
+    const fullProvince = await this.getProvinceByProvinceId(provinceId);
     const addressQuery = `${fullProvince.fullNameEn}, Vietnam`;
     console.log('Address to query: ', addressQuery);
 

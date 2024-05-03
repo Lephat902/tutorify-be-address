@@ -34,9 +34,9 @@ export class AddressController {
     return wardEntities;
   }
 
-  @MessagePattern({ cmd: 'getProvince' })
-  async getProvince(provinceCode: string) {
-    return this.addressService.getProvince(provinceCode);
+  @MessagePattern({ cmd: 'getProvinceByProvinceId' })
+  async getProvinceByProvinceId(provinceCode: string) {
+    return this.addressService.getProvinceByProvinceId(provinceCode);
   }
 
   @MessagePattern({ cmd: 'getFullAddressByDistrictCode' })
@@ -49,9 +49,9 @@ export class AddressController {
     return this.addressService.getFullAddressByWard(wardCode);
   }
 
-  @MessagePattern({ cmd: 'getProvinceByProvinceSlug' })
-  async getProvinceByProvinceSlug(slug: string) {
-    return this.addressService.getProvince(slug, 'slug');
+  @MessagePattern({ cmd: 'getProvinceByProvinceIdByProvinceSlug' })
+  async getProvinceByProvinceIdByProvinceSlug(slug: string) {
+    return this.addressService.getProvinceByProvinceId(slug, 'slug');
   }
 
   @MessagePattern({ cmd: 'getFullAddressByDistrictSlug' })
