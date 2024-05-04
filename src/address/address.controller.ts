@@ -74,16 +74,31 @@ export class AddressController {
 
   @MessagePattern({ cmd: 'getGeocodeFromWardId' })
   async getGeocodeFromWardId(wardId: string) {
-    return this.addressService.getGeocodeFromWardId(wardId);
+    return this.addressService.getGeocodeFromWard(wardId, 'code');
   }
 
   @MessagePattern({ cmd: 'getGeocodeFromDistrictId' })
   async getGeocodeFromDistrictId(districtId: string) {
-    return this.addressService.getGeocodeFromDistrictId(districtId);
+    return this.addressService.getGeocodeFromDistrict(districtId, 'code');
   }
 
   @MessagePattern({ cmd: 'getGeocodeFromProvinceId' })
   async getGeocodeFromProvinceId(provinceId: string) {
-    return this.addressService.getGeocodeFromProvinceId(provinceId);
+    return this.addressService.getGeocodeFromProvince(provinceId, 'code');
+  }
+
+  @MessagePattern({ cmd: 'getGeocodeFromWardSlug' })
+  async getGeocodeFromWardSlug(wardSlug: string) {
+    return this.addressService.getGeocodeFromWard(wardSlug, 'slug');
+  }
+
+  @MessagePattern({ cmd: 'getGeocodeFromDistrictSlug' })
+  async getGeocodeFromDistrictSlug(districtSlug: string) {
+    return this.addressService.getGeocodeFromDistrict(districtSlug, 'slug');
+  }
+
+  @MessagePattern({ cmd: 'getGeocodeFromProvinceSlug' })
+  async getGeocodeFromProvinceSlug(provinceSlug: string) {
+    return this.addressService.getGeocodeFromProvince(provinceSlug, 'slug');
   }
 }

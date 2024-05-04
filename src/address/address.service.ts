@@ -76,8 +76,8 @@ export class AddressService {
     return this.geocodeProxy.geocode(addressQuery);
   }
 
-  async getGeocodeFromWardId(wardId: string): Promise<GeocodeResponseDto> {
-    const fullWard = await this.getFullAddressByWard(wardId);
+  async getGeocodeFromWard(value: string, findOneOption: FindOneOption): Promise<GeocodeResponseDto> {
+    const fullWard = await this.getFullAddressByWard(value, findOneOption);
     const wardName = removeLeadingZero(fullWard.fullNameEn);
     const districtName = removeLeadingZero(fullWard.district.fullNameEn);
     const addressQuery = `${wardName}, ${districtName}, ${fullWard.district.province.fullNameEn}, Vietnam`;
@@ -86,8 +86,8 @@ export class AddressService {
     return this.geocodeProxy.geocode(addressQuery);
   }
 
-  async getGeocodeFromDistrictId(districtId: string): Promise<GeocodeResponseDto> {
-    const fullDistrict = await this.getFullAddressByDistrict(districtId);
+  async getGeocodeFromDistrict(districtId: string, findOneOption: FindOneOption): Promise<GeocodeResponseDto> {
+    const fullDistrict = await this.getFullAddressByDistrict(districtId, findOneOption);
     const districtName = removeLeadingZero(fullDistrict.fullNameEn);
     const addressQuery = `${districtName}, ${fullDistrict.province.fullNameEn}, Vietnam`;
     console.log('Address to query: ', addressQuery);
@@ -95,8 +95,8 @@ export class AddressService {
     return this.geocodeProxy.geocode(addressQuery);
   }
 
-  async getGeocodeFromProvinceId(provinceId: string): Promise<GeocodeResponseDto> {
-    const fullProvince = await this.getProvinceByProvinceId(provinceId);
+  async getGeocodeFromProvince(provinceId: string, findOneOption: FindOneOption): Promise<GeocodeResponseDto> {
+    const fullProvince = await this.getProvinceByProvinceId(provinceId, findOneOption);
     const addressQuery = `${fullProvince.fullNameEn}, Vietnam`;
     console.log('Address to query: ', addressQuery);
 
